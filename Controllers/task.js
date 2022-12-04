@@ -1,4 +1,5 @@
 const Task = require("../models/task");
+const User = require("../models/user");
 
 const postTaskToUserId = async  (req, res) => {
   try {
@@ -60,17 +61,24 @@ const updateTasksForUserId = async (req,res) => {
     res.status(401).json({"error" : err,taskId, message : "update task failed"})
   }
 }
+
 const deleteTaskById = async (req,res) => {
-  
   try {
-      const { userId , taskId } = req.params;
-      if(err) console.log(err)
-    // const deleteTask = await Task.find(taskId);
-    // res.json({message : "deleted a task"  })
+    const { userId , taskId } = req.params;
+    console.log(userId , taskId)
+    try {
+          // let deletableTask = await Task.find({_id : taskId});
+          // console.log(deletableTask)
+          await Task.deleteOne({_id : taskId});
+          res.json({message : "deleted task" ,task_id : taskId})
+    } catch (error) {
+      console.error(error,"at finding the deletable task")
+          res.json({ error ,message : "error at finding the deletable task"})
+    }
   }
   catch(err){
-    console.error(err,"error at delete")
-    // res.status(400).json({"error" : err, taskId, message : "task couldn't be deleted"})
+    res.json({"isSuccess" : false, err});
   }
 }
-module.exports = { postTaskToUserId , getTasks , getTasksByUserId,updateTasksForUserId , deleteTaskById};
+
+module.exports = { postTaskToUserId , getTasks , getTasksByUserId,updateTasksForUserId  , deleteTaskById };
