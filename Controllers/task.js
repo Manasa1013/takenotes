@@ -15,7 +15,18 @@ const postTaskToUserId = async  (req, res) => {
   }
 }
 
-
+const postTasks = async (req,res) => {
+  try {
+    let addTask = req.body;
+    const newTask = new Task({...addTask , "userId" : "638e4956b71204d373f83ad6"});
+    //posting as user shraddha ,it's to test functionality
+    await newTask.save();
+    res.json({"isSuccess" : true, message : "task posted ", response : newTask});
+    
+  } catch(err) {
+    res.json({"isSuccess" : false, "error" : err});
+  }
+}
 let tasks = [
   {
     id: 1670086655087,
@@ -29,7 +40,8 @@ let tasks = [
 const getTasks = async (req,res) => {
   try {
     const response = await Task.find({});
-    console.log(response,"at gettasks ")
+    // console.log(response,"at gettasks ")
+    
     res.json({"response" :response})
   }
   catch (err) {
@@ -81,4 +93,4 @@ const deleteTaskById = async (req,res) => {
   }
 }
 
-module.exports = { postTaskToUserId , getTasks , getTasksByUserId,updateTasksForUserId  , deleteTaskById };
+module.exports = { postTaskToUserId , getTasks , postTasks, getTasksByUserId,updateTasksForUserId  , deleteTaskById };
